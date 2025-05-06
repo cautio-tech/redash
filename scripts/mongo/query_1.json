@@ -1,0 +1,11 @@
+{
+    "collection": "vehicle_states",
+    "fields": {
+        "last_coordinates.longitude": 1,
+        "last_coordinates.latitude": 1,
+        "last_coordinates.speed": 1,
+        "status": 1,
+        "status_since": 1,
+        "device_id": 1
+    }
+}
