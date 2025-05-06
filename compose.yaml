@@ -12,7 +12,6 @@ x-redash-service: &redash-service
 x-redash-environment: &redash-environment
   REDASH_LOG_LEVEL: "INFO"
   REDASH_REDIS_URL: "redis://redis:6379/0"
-  REDASH_DATABASE_URL: "postgresql://postgres@postgres/postgres"
   REDASH_RATELIMIT_ENABLED: "false"
   REDASH_ENFORCE_CSRF: "true"
   REDASH_GUNICORN_TIMEOUT: 60
@@ -22,7 +21,6 @@ services:
     <<: *redash-service
     command: dev_server
     depends_on:
-      - postgres
       - redis
     ports:
       - "5001:5000"
@@ -48,17 +46,6 @@ services:
   redis:
     image: redis:7-alpine
     restart: unless-stopped
-  postgres:
-    image: pgautoupgrade/pgautoupgrade:latest
-    ports:
-      - "15432:5432"
-    # The following turns the DB into less durable, but gains significant performance improvements for the tests run (x3
-    # improvement on my personal machine). We should consider moving this into a dedicated Docker Compose configuration for
-    # tests.
-    command: "postgres -c fsync=off -c full_page_writes=off -c synchronous_commit=OFF"
-    restart: unless-stopped
-    environment:
-      POSTGRES_HOST_AUTH_METHOD: "trust"
   email:
     image: maildev/maildev
     ports:
